@@ -3,20 +3,22 @@
     "sourceMap": true,
     "target": "es5",
     "jsx": "react",
-    "module": "es6",
+    "module": "esnext",
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "declaration": false,
+    "resolveJsonModule": true,
     "removeComments": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "strict": true,
+    "strict": false,
     "outDir": "build",
-    "lib": ["es6", "es7", "dom"],
+    "lib": ["es6", "esnext", "dom"],
     "baseUrl": "src",
     "paths": {
       "app/*": ["./app/*"]
     },
+    "types": ["webpack-env"],
     "allowSyntheticDefaultImports": true
   },
   "exclude": ["build", "node_modules"]
