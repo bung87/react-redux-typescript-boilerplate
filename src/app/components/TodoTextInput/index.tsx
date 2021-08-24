@@ -2,19 +2,16 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import style from './style.css';
 
-export namespace TodoTextInput {
-  export interface Props {
-    placeholder?: string;
-    newTodo?: boolean;
-    onSave: (text: string) => void;
-  }
-
-  export interface State {
-    text: string;
-  }
+interface Props {
+  placeholder?: string;
+  newTodo?: boolean;
+  onSave: (text: string) => void;
 }
+// interface State {
+//   text: string;
+// }
 
-export const TodoTextInput = ({ placeholder, newTodo, onSave }: TodoTextInput.Props): JSX.Element => {
+export const TodoTextInput = ({ placeholder, newTodo, onSave }: Props): JSX.Element => {
   const [inputText, setInputText] = useState('');
 
   const handleSubmit = React.useCallback(
@@ -25,14 +22,14 @@ export const TodoTextInput = ({ placeholder, newTodo, onSave }: TodoTextInput.Pr
         setInputText('');
       }
     },
-    [onSave, setInputText]
+    [onSave, setInputText],
   );
 
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setInputText(event.target.value);
     },
-    [setInputText]
+    [setInputText],
   );
 
   const handleBlur = React.useCallback(
@@ -42,15 +39,15 @@ export const TodoTextInput = ({ placeholder, newTodo, onSave }: TodoTextInput.Pr
         onSave(text);
       }
     },
-    [onSave]
+    [onSave],
   );
 
   const classes = classNames(
     {
       [style.edit]: !newTodo,
-      [style.new]: newTodo
+      [style.new]: newTodo,
     },
-    style.normal
+    style.normal,
   );
 
   return (

@@ -5,16 +5,16 @@ import { TodoModel } from 'app/models';
 import { TodoActions } from 'app/actions';
 import { TodoTextInput } from '../TodoTextInput';
 
-export namespace TodoItem {
-  export interface Props {
-    todo: TodoModel;
-    editTodo: typeof TodoActions.editTodo;
-    deleteTodo: typeof TodoActions.deleteTodo;
-    completeTodo: typeof TodoActions.completeTodo;
-  }
+interface Props {
+  todo: TodoModel;
+  editTodo: typeof TodoActions.editTodo;
+  deleteTodo: typeof TodoActions.deleteTodo;
+  completeTodo: typeof TodoActions.completeTodo;
 }
 
-export const TodoItem = ({ todo, editTodo, deleteTodo, completeTodo }: TodoItem.Props) => {
+export const TodoItem = ({
+  todo, editTodo, deleteTodo, completeTodo,
+}: Props) => {
   const [editing, setEditing] = useState(false);
 
   const handleDoubleClick = React.useCallback(() => {
@@ -30,19 +30,19 @@ export const TodoItem = ({ todo, editTodo, deleteTodo, completeTodo }: TodoItem.
       }
       setEditing(false);
     },
-    [editTodo, deleteTodo, setEditing]
+    [editTodo, deleteTodo, setEditing],
   );
 
   const classes = classNames({
     [style.completed]: todo.completed,
     [style.editing]: editing,
-    [style.normal]: !editing
+    [style.normal]: !editing,
   });
 
   return (
     <li className={classes}>
       {editing ? (
-        <TodoTextInput onSave={(text) => todo.id && handleSave(todo.id, text)} />
+        <TodoTextInput onSave={text => todo.id && handleSave(todo.id, text)} />
       ) : (
         <div className={style.view}>
           <input
@@ -53,6 +53,7 @@ export const TodoItem = ({ todo, editTodo, deleteTodo, completeTodo }: TodoItem.
           />
           <label onDoubleClick={() => handleDoubleClick()}>{todo.text}</label>
           <button
+            type="button"
             className={style.destroy}
             onClick={() => {
               if (todo.id) deleteTodo(todo.id);
