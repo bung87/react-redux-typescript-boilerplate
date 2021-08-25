@@ -11,12 +11,14 @@ import  HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import { GitRevisionPlugin } from 'git-revision-webpack-plugin';
 import themeConfig from './src/theme_config';
 // variables
 const isProduction = process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production';
 const sourcePath = path.join(__dirname, './src');
 const outPath = path.join(__dirname, './build');
 const tsconfig = JSON5.parse(fs.readFileSync('./tsconfig.json').toString());
+const gitRevisionPlugin = new GitRevisionPlugin();
 export default {
   context: sourcePath,
   entry: {
@@ -179,6 +181,13 @@ export default {
     },
   },
   plugins: [
+    gitRevisionPlugin,
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(gitRevisionPlugin.version()),
+      COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
+      BRANCH: JSON.stringify(gitRevisionPlugin.branch()),
+      LASTCOMMITDATETIME: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
+    }),
     !isProduction ? new DashboardPlugin() : null,
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
