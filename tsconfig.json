@@ -1,10 +1,15 @@
 {
   "compilerOptions": {
+    "strict": false,
     "sourceMap": true,
     "target": "es5",
     "jsx": "react",
     "module": "esnext",
     "moduleResolution": "node",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    // "isolatedModules": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "declaration": false,
@@ -12,14 +17,91 @@
     "removeComments": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "strict": false,
     "outDir": "build",
     "lib": ["es6", "esnext", "dom"],
-    "baseUrl": "src",
+    "baseUrl": "./src",
     "paths": {
-      "app/*": ["./app/*"]
+      "@apis/*": [
+        "apis/*"
+      ],
+      "@definitions/*": [
+        "definitions/*"
+      ],
+      "@definitions": [
+        "definitions"
+      ],
+      "@store/*": [
+        "store/*"
+      ],
+      "@store": [
+        "store"
+      ],
+      "@interfaces/*": [
+        "interfaces/*"
+      ],
+      "@interfaces": [
+        "interfaces"
+      ],
+      "@middlewares/*": [
+        "middlewares/*"
+      ],
+      "@middlewares": [
+        "middlewares"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@components": [
+        "components"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@pages": [
+        "pages"
+      ],
+      "@models/*": [
+        "models/*"
+      ],
+      "@models": [
+        "models"
+      ],
+      "@actions/*": [
+        "actions/*"
+      ],
+      "@actions": [
+        "actions"
+      ],
+      "@reducers/*": [
+        "reducers/*"
+      ],
+      "@reducers": [
+        "reducers"
+      ],
+      "@styles/*": [
+        "styles/*"
+      ],
+      "@styles": [
+        "styles"
+      ],
+      "@public/*": [
+        "public/*"
+      ],
+      "@public": [
+        "public"
+      ],
+      "@components/icons/*": [
+        "components/icons/*"
+      ],
+      "@components/icons": [
+        "components/icons"
+      ],
+      "@i18n": [
+        "./i18n"
+      ]
     },
     "types": ["webpack-env"],
+    "typeRoots": ["./types"],
     "allowSyntheticDefaultImports": true
   },
   "exclude": ["build", "node_modules"]

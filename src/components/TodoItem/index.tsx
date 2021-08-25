@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import style from './style.css';
-import { TodoModel } from 'app/models';
-import { TodoActions } from 'app/actions';
+import style from './style.module.css';
+import { TodoModel } from '@models';
+import { TodoActions } from '@actions';
 import { TodoTextInput } from '../TodoTextInput';
 
 interface Props {

@@ -4,7 +4,8 @@ import webpack from 'webpack';
 import path from 'path';
 import pkg from './package.json';
 import DashboardPlugin from 'webpack-dashboard/plugin';
-
+import JSON5 from 'json5';
+import fs from 'fs';
 // plugins
 import  HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -15,7 +16,7 @@ import themeConfig from './src/theme_config';
 const isProduction = process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production';
 const sourcePath = path.join(__dirname, './src');
 const outPath = path.join(__dirname, './build');
-
+const tsconfig = JSON5.parse(fs.readFileSync('./tsconfig.json').toString());
 export default {
   context: sourcePath,
   entry: {
@@ -32,9 +33,13 @@ export default {
     // Fix webpack's default behavior to not load packages with jsnext:main module
     // (jsnext:main directs not usually distributable es6 format, but es6 sources)
     mainFields: ['module', 'browser', 'main'],
-    alias: {
-      app: path.resolve(__dirname, 'src/app/'),
-    },
+    alias: Object.keys(tsconfig.compilerOptions.paths).reduce((aliases, aliasName) => {
+
+      // eslint-disable-next-line no-param-reassign
+      aliases[aliasName] = path.resolve(__dirname, `src/${tsconfig.compilerOptions.paths[aliasName][0]}`);
+
+      return aliases;
+    }, {}),
   },
   module: {
     rules: [
@@ -59,10 +64,15 @@ export default {
       {
         test: /\.css$/,
         use: [
-          isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
-          {
-            loader: '@teamsupercell/typings-for-css-modules-loader',
-          },
+          isProduction ? {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              esModule: false,
+            },
+          } : 'style-loader',
+          // {
+          //   loader: '@teamsupercell/typings-for-css-modules-loader',
+          // },
           {
             loader: 'css-loader',
             options: {
@@ -84,9 +94,9 @@ export default {
         exclude: /\.module\.less$/,
         use: [
           'style-loader',
-          {
-            loader: '@teamsupercell/typings-for-css-modules-loader',
-          },
+          // {
+          //   loader: '@teamsupercell/typings-for-css-modules-loader',
+          // },
           {
             loader: 'css-loader',
             options: {
@@ -117,9 +127,9 @@ export default {
         test: /\.module\.less$/,
         use: [
           'style-loader',
-          {
-            loader: '@teamsupercell/typings-for-css-modules-loader',
-          },
+          // {
+          //   loader: '@teamsupercell/typings-for-css-modules-loader',
+          // },
           {
             loader: 'css-loader',
             options: {

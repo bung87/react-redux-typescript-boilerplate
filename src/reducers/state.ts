@@ -1,4 +1,4 @@
-import { TodoModel } from 'app/models';
+import { TodoModel } from '@models';
 
 export type TodoState = TodoModel[];
 export interface RootState {

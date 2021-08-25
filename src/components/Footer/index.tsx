@@ -1,36 +1,37 @@
 import React from 'react';
-import style from './style.css';
+import style from './style.module.css';
 import classNames from 'classnames';
-import { TodoModel } from 'app/models';
+import * as TodoModel from '@models';
 
 export const FILTER_TITLES = {
   [TodoModel.Filter.SHOW_ALL]: 'All',
   [TodoModel.Filter.SHOW_ACTIVE]: 'Active',
-  [TodoModel.Filter.SHOW_COMPLETED]: 'Completed'
+  [TodoModel.Filter.SHOW_COMPLETED]: 'Completed',
 };
 
-export namespace Footer {
-  export interface Props {
-    filter: TodoModel.Filter;
-    activeCount?: number;
-    completedCount?: number;
-    onClickFilter: (filter: TodoModel.Filter) => any;
-    onClickClearCompleted: () => any;
-  }
+export interface Props {
+  filter: TodoModel.Filter;
+  activeCount?: number;
+  completedCount?: number;
+  onClickFilter: (filter: TodoModel.Filter) => any;
+  onClickClearCompleted: () => any;
 }
-
 export const Footer = ({
   filter,
   activeCount,
   completedCount,
   onClickFilter,
-  onClickClearCompleted
-}: Footer.Props): JSX.Element => {
+  onClickClearCompleted,
+}: Props): JSX.Element => {
   const renderTodoCount = React.useCallback((): JSX.Element => {
     const itemWord = activeCount === 1 ? ' item' : 'items';
     return (
       <span className={style.count}>
-        <strong>{activeCount || 'No'}</strong> {itemWord} left
+        <strong>{activeCount || 'No'}</strong>
+        {' '}
+        {itemWord}
+        {' '}
+        left
       </span>
     );
   }, [activeCount]);
@@ -42,25 +43,30 @@ export const Footer = ({
           className={classNames({ [style.selected]: filter === selectedFilter })}
           style={{ cursor: 'pointer' }}
           onClick={() => onClickFilter(selectedFilter)}
-          children={FILTER_TITLES[selectedFilter]}
-        />
+        >
+          {FILTER_TITLES[selectedFilter]}
+        </a>
       );
     },
-    [filter, onClickFilter]
+    [filter, onClickFilter],
   );
 
   const renderClearButton = React.useCallback((): JSX.Element | void => {
     if (completedCount! > 0) {
-      return <button className={style.clearCompleted} onClick={onClickClearCompleted} children={'Clear completed'} />;
+      return <button type="button" className={style.clearCompleted} onClick={onClickClearCompleted}>Clear completed</button>;
     }
+    return null;
   }, [completedCount]);
 
   return (
     <footer className={style.normal}>
       {renderTodoCount()}
       <ul className={style.filters}>
-        {(Object.keys(TodoModel.Filter) as (keyof typeof TodoModel.Filter)[]).map((key) => (
-          <li key={key} children={renderFilterLink(TodoModel.Filter[key])} />
+        {(Object.keys(TodoModel.Filter) as (keyof typeof TodoModel.Filter)[]).map(key => (
+          <li key={key}>
+            {renderFilterLink(TodoModel.Filter[key])}
+            {' '}
+          </li>
         ))}
       </ul>
       {renderClearButton()}

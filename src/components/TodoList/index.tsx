@@ -1,22 +1,22 @@
 import React from 'react';
-import style from './style.css';
-import { TodoActions } from 'app/actions/todos';
+import style from './style.module.css';
+import { TodoActions } from '@actions';
 import { TodoItem } from '../TodoItem';
-import { TodoModel } from 'app/models/TodoModel';
+import { TodoModel } from '@models/TodoModel';
 
 interface Props {
   todos: TodoModel[];
-  actions: TodoActions;
+  actions: typeof TodoActions;
 }
 export const TodoList = ({ todos, actions }: Props): JSX.Element => {
-  const hasIncompleted = React.useMemo(() => todos.some((todo) => !todo.completed), []);
+  const hasIncompleted = React.useMemo(() => todos.some(todo => !todo.completed), []);
   return (
     <section className={style.main}>
       {hasIncompleted && (
         <input className={style.toggleAll} type="checkbox" checked={hasIncompleted} onChange={actions.completeAll} />
       )}
       <ul className={style.normal}>
-        {todos.map((todo) => (
+        {todos.map(todo => (
           <TodoItem
             key={todo.id}
             todo={todo}

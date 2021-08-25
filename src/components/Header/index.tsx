@@ -1,19 +1,17 @@
 import React from 'react';
 import { TodoTextInput } from '../TodoTextInput';
-import { TodoActions } from 'app/actions/todos';
+import { TodoActions } from '@actions';
 
-export namespace Header {
-  export interface Props {
-    addTodo: typeof TodoActions.addTodo;
-  }
+export interface Props {
+  addTodo: typeof TodoActions.addTodo;
 }
 
-export const Header = ({ addTodo }: Header.Props): JSX.Element => {
+export const Header = ({ addTodo }: Props): JSX.Element => {
   const handleSave = React.useCallback(
     (text: string) => {
       if (text.length) addTodo({ text });
     },
-    [addTodo]
+    [addTodo],
   );
 
   return (
