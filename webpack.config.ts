@@ -70,9 +70,9 @@ export default {
               esModule: false,
             },
           } : 'style-loader',
-          // {
-          //   loader: '@teamsupercell/typings-for-css-modules-loader',
-          // },
+          {
+            loader: '@teamsupercell/typings-for-css-modules-loader',
+          },
           {
             loader: 'css-loader',
             options: {
@@ -94,9 +94,9 @@ export default {
         exclude: /\.module\.less$/,
         use: [
           'style-loader',
-          // {
-          //   loader: '@teamsupercell/typings-for-css-modules-loader',
-          // },
+          {
+            loader: '@teamsupercell/typings-for-css-modules-loader',
+          },
           {
             loader: 'css-loader',
             options: {
@@ -127,9 +127,9 @@ export default {
         test: /\.module\.less$/,
         use: [
           'style-loader',
-          // {
-          //   loader: '@teamsupercell/typings-for-css-modules-loader',
-          // },
+          {
+            loader: '@teamsupercell/typings-for-css-modules-loader',
+          },
           {
             loader: 'css-loader',
             options: {
