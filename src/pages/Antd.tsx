@@ -1,5 +1,5 @@
 import React from 'react';
-import './Antd.module.less';
+import './Antd.less';
 import { Button } from 'antd';
 
 export default function App () {

@@ -23,6 +23,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.15.0",
+    "@hot-loader/react-dom": "^16.14.0",
     "@juzibot/eslint-config-react": "^1.0.12",
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.1",
     "@types/classnames": "^2.2.9",

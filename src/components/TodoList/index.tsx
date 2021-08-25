@@ -15,6 +15,7 @@ export const TodoList = ({ todos, actions }: Props): JSX.Element => {
       {hasIncompleted && (
         <input className={style.toggleAll} type="checkbox" checked={hasIncompleted} onChange={actions.completeAll} />
       )}
+
       <ul className={style.normal}>
         {todos.map(todo => (
           <TodoItem

@@ -12,7 +12,9 @@ interface Props {
   completeTodo: typeof TodoActions.completeTodo;
 }
 
-export const TodoItem = ({ todo, editTodo, deleteTodo, completeTodo }: Props) => {
+export const TodoItem = ({
+  todo, editTodo, deleteTodo, completeTodo,
+}: Props) => {
   const [editing, setEditing] = useState(false);
 
   const handleDoubleClick = React.useCallback(() => {
@@ -28,19 +30,19 @@ export const TodoItem = ({ todo, editTodo, deleteTodo, completeTodo }: Props) =>
       }
       setEditing(false);
     },
-    [editTodo, deleteTodo, setEditing]
+    [editTodo, deleteTodo, setEditing],
   );
 
   const classes = classNames({
     [style.completed]: todo.completed,
     [style.editing]: editing,
-    [style.normal]: !editing
+    [style.normal]: !editing,
   });
 
   return (
     <li className={classes}>
       {editing ? (
-        <TodoTextInput onSave={(text) => todo.id && handleSave(todo.id, text)} />
+        <TodoTextInput onSave={text => todo.id && handleSave(todo.id, text)} />
       ) : (
         <div className={style.view}>
           <input

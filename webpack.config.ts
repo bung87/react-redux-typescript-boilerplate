@@ -39,7 +39,7 @@ export default {
       aliases[aliasName] = path.resolve(__dirname, `src/${tsconfig.compilerOptions.paths[aliasName][0]}`);
 
       return aliases;
-    }, {}),
+    }, { 'react-dom': '@hot-loader/react-dom' }),
   },
   module: {
     rules: [
