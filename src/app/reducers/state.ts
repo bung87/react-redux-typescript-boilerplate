@@ -1,10 +1,7 @@
 import { TodoModel } from 'app/models';
 
+export type TodoState = TodoModel[];
 export interface RootState {
-  todos: RootState.TodoState;
+  todos: TodoState;
   router?: any;
-}
-
-export namespace RootState {
-  export type TodoState = TodoModel[];
 }

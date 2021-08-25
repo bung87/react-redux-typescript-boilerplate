@@ -10,6 +10,7 @@ import  HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import themeConfig from './src/theme_config';
 // variables
 const isProduction = process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production';
 const sourcePath = path.join(__dirname, './src');
@@ -22,8 +23,8 @@ export default {
   },
   output: {
     path: outPath,
-    filename: isProduction ? '[contenthash].js' : '[hash].js',
-    chunkFilename: isProduction ? '[name].[contenthash].js' : '[name].[hash].js',
+    // filename: isProduction ? '[contenthash].js' : '[fullhash].js',
+    // chunkFilename: isProduction ? '[name].[contenthash].js' : '[name].[fullhash].js',
   },
   target: 'web',
   resolve: {
@@ -67,28 +68,12 @@ export default {
             options: {
               sourceMap: !isProduction,
               modules: {
+                auto: true,
                 localIdentName: isProduction ? '[hash:base64:5]' : '[local]__[hash:base64:5]',
               },
             },
           },
-          {
-            loader: 'postcss-loader',
-            options: {
-              ident: 'postcss',
-              plugins: [
-                require('postcss-import')({ addDependencyTo: webpack }),
-                require('postcss-url')(),
-                require('postcss-preset-env')({
-                  /* use stage 2 features (defaults) */
-                  stage: 2,
-                }),
-                require('postcss-reporter')(),
-                require('postcss-browser-reporter')({
-                  disabled: isProduction,
-                }),
-              ],
-            },
-          },
+          'postcss-loader',
         ],
       }, {
         test: /node_modules\/.+\.css$/,
@@ -108,7 +93,7 @@ export default {
               sourceMap: false,
               importLoaders: 1,
               modules: {
-                mode: 'icss',
+                mode: 'global',
               },
             },
           },
@@ -117,6 +102,11 @@ export default {
             loader: 'less-loader',
             options: {
               lessOptions: {
+                modifyVars: {
+                  '@primary-color': themeConfig.themeColor,
+                  '@primary-gradient-color': themeConfig.gradientColor,
+                  '@main-btn-bg': `linear-gradient(270deg, ${themeConfig.gradientColor} 0%, ${themeConfig.themeColor} 100%)`,
+                },
                 javascriptEnabled: true,
               },
             },
@@ -163,22 +153,20 @@ export default {
     ],
   },
   optimization: {
+    mergeDuplicateChunks: true,
     splitChunks: {
-      name: true,
       cacheGroups: {
-        commons: {
-          chunks: 'initial',
-          minChunks: 2,
-        },
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
+        vendor: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'vendor',
           chunks: 'all',
-          filename: isProduction ? 'vendor.[contenthash].js' : 'vendor.[hash].js',
-          priority: -10,
         },
       },
     },
-    runtimeChunk: true,
+    runtimeChunk: {
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+      name: entrypoint => `runtime~${entrypoint.name}`,
+    },
   },
   plugins: [
     !isProduction ? new DashboardPlugin() : null,
@@ -217,22 +205,21 @@ export default {
     }),
   ].filter(Boolean),
   devServer: {
-    contentBase: sourcePath,
+    static: sourcePath,
     hot: true,
-    inline: true,
-    quiet: true,
     historyApiFallback: {
       disableDotRule: true,
     },
-    stats: 'minimal',
-    clientLogLevel: 'warning',
+    client: {
+      logging: 'warn',
+    },
   },
   // https://webpack.js.org/configuration/devtool/
-  devtool: isProduction ? 'hidden-source-map' : 'cheap-module-eval-source-map',
-  node: {
-    // workaround for webpack-dev-server issue
-    // https://github.com/webpack/webpack-dev-server/issues/60#issuecomment-103411179
-    fs: 'empty',
-    net: 'empty',
-  },
+  devtool: isProduction ? 'hidden-source-map' : 'cheap-module-source-map',
+  // node: {
+  //   // workaround for webpack-dev-server issue
+  //   // https://github.com/webpack/webpack-dev-server/issues/60#issuecomment-103411179
+  //   fs: 'empty',
+  //   net: 'empty',
+  // },
 };

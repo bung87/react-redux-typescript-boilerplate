@@ -8,7 +8,7 @@ import { TodoModel } from 'app/models';
 import { Header, TodoList, Footer } from 'app/components';
 
 const FILTER_VALUES = (Object.keys(TodoModel.Filter) as (keyof typeof TodoModel.Filter)[]).map(
-  (key) => TodoModel.Filter[key]
+  key => TodoModel.Filter[key]
 );
 
 const FILTER_FUNCTIONS: Record<TodoModel.Filter, (todo: TodoModel) => boolean> = {
