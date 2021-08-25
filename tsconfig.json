@@ -6,6 +6,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "declaration": false,
     "resolveJsonModule": true,
     "removeComments": true,

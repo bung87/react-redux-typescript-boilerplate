@@ -3,7 +3,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { RootState, rootReducer } from 'app/reducers';
 import { logger, thunk } from 'app/middleware';
 
-export function configureStore (initialState?: RootState): Store<RootState> {
+export function configureStore(initialState?: RootState): Store<RootState> {
   let middleware = applyMiddleware(thunk, logger);
 
   if (process.env.NODE_ENV !== 'production') {

@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable global-require */
-import * as webpack from 'webpack';
-import * as path from 'path';
-import * as pkg from './package.json';
-import * as DashboardPlugin from 'webpack-dashboard/plugin';
+import webpack from 'webpack';
+import path from 'path';
+import pkg from './package.json';
+import DashboardPlugin from 'webpack-dashboard/plugin';
 
 // plugins
-import * as HtmlWebpackPlugin from 'html-webpack-plugin';
-import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import  HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 // variables
 const isProduction = process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production';
 const sourcePath = path.join(__dirname, './src');
@@ -44,7 +45,13 @@ export default {
             loader: 'babel-loader',
             options: { plugins: ['react-hot-loader/babel'] },
           },
-          'ts-loader',
+          {
+            loader: 'ts-loader',
+            options: {
+              // disable type checker - we will use it in fork plugin
+              transpileOnly: true,
+            },
+          },
         ].filter(Boolean),
       },
       // css
@@ -201,6 +208,11 @@ export default {
         title: pkg.name,
         description: pkg.description,
         keywords: Array.isArray(pkg.keywords) ? pkg.keywords.join(',') : '',
+      },
+    }),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        configFile: path.join(__dirname, 'tsconfig.json'),
       },
     }),
   ].filter(Boolean),

@@ -22,14 +22,14 @@ export const TodoTextInput = ({ placeholder, newTodo, onSave }: Props): JSX.Elem
         setInputText('');
       }
     },
-    [onSave, setInputText],
+    [onSave, setInputText]
   );
 
   const handleChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setInputText(event.target.value);
     },
-    [setInputText],
+    [setInputText]
   );
 
   const handleBlur = React.useCallback(
@@ -39,14 +39,14 @@ export const TodoTextInput = ({ placeholder, newTodo, onSave }: Props): JSX.Elem
         onSave(text);
       }
     },
-    [onSave],
+    [onSave]
   );
 
   const classes = classNames(
     {
       [style.edit]: !newTodo,
-      [style.new]: newTodo,
-    },
+      [style.new]: newTodo
+    }
     // style.normal,
   );
 
