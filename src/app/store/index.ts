@@ -12,8 +12,8 @@ export function configureStore (initialState?: RootState): Store<RootState> {
 
   const store = createStore(rootReducer as any, initialState as any, middleware) as Store<RootState>;
 
-  if (window.module.hot) {
-    window.module.hot.accept('app/reducers', () => {
+  if (module.hot) {
+    module.hot.accept('app/reducers', () => {
       // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
       const nextReducer = require('app/reducers');
       store.replaceReducer(nextReducer);
