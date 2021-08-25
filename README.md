@@ -19,7 +19,7 @@ Ideal for creating React apps from the scratch.
 
 ### Build tools
 
-- [x] [Webpack](https://webpack.github.io) 4
+- [x] [Webpack](https://webpack.github.io) 5
   - [x] [Tree Shaking](https://medium.com/@Rich_Harris/tree-shaking-versus-dead-code-elimination-d3765df85c80)
   - [x] [Webpack Dev Server](https://github.com/webpack/webpack-dev-server)
 - [x] [Typescript Loader](https://github.com/TypeStrong/ts-loader)
