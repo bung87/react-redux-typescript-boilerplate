@@ -53,10 +53,12 @@ export default {
         use: [
           isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
           {
+            loader: '@teamsupercell/typings-for-css-modules-loader',
+          },
+          {
             loader: 'css-loader',
-            query: {
+            options: {
               sourceMap: !isProduction,
-              importLoaders: 1,
               modules: {
                 localIdentName: isProduction ? '[hash:base64:5]' : '[local]__[hash:base64:5]',
               },
@@ -81,10 +83,13 @@ export default {
             },
           },
         ],
+      }, {
+        test: /node_modules\/.+\.css$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.less$/,
-        exclude: /node_modules/,
+        exclude: /\.module\.less$/,
         use: [
           'style-loader',
           {
@@ -93,10 +98,41 @@ export default {
           {
             loader: 'css-loader',
             options: {
-              minimize: isProduction,
-              modules: true,
               sourceMap: false,
-              localIdentName: '[path][name]__[local]',
+              importLoaders: 1,
+              modules: {
+                mode: 'icss',
+              },
+            },
+          },
+          'postcss-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              lessOptions: {
+                javascriptEnabled: true,
+              },
+            },
+          },
+        ],
+      },
+      {
+        test: /\.module\.less$/,
+        use: [
+          'style-loader',
+          {
+            loader: '@teamsupercell/typings-for-css-modules-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                mode: 'local',
+                namedExport: true,
+                localIdentName: '[path][name]__[local]',
+                exportOnlyLocals: false,
+              },
+              sourceMap: false,
             },
           },
           'postcss-loader',

@@ -47,7 +47,7 @@ export const TodoTextInput = ({ placeholder, newTodo, onSave }: Props): JSX.Elem
       [style.edit]: !newTodo,
       [style.new]: newTodo,
     },
-    style.normal,
+    // style.normal,
   );
 
   return (
