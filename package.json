@@ -16,12 +16,14 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "format": "prettier -w src",
+    "supportedBrowsers": "browserslist-useragent-regexp --allowHigherVersions -o src/supportedBrowsers.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dashboard -- webpack-dev-server --mode development --hot --progress --color --port 3000 --open",
     "build": "webpack-dashboard -- webpack -p --progress --colors"
   },
   "license": "MIT",
   "devDependencies": {
+    "@ad2302/browserslist-useragent-regexp": "^3.1.2",
     "@babel/core": "^7.15.0",
     "@hot-loader/react-dom": "^16.14.0",
     "@juzibot/eslint-config-react": "^1.0.12",
