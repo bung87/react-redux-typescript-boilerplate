@@ -3,7 +3,6 @@
   "version": "1.1.1",
   "private": true,
   "description": "A frontend boilerplate with React hooks, Redux and Typescript",
-  "homepage": "https://rokoroku.github.io/react-redux-typescript-boilerplate",
   "keywords": [
     "react",
     "hooks",
@@ -24,7 +23,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.15.0",
-    "@juzibot/eslint-config-react": "^1.0.11",
+    "@juzibot/eslint-config-react": "^1.0.12",
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.1",
     "@types/classnames": "^2.2.9",
     "@types/history": "^4.7.3",
