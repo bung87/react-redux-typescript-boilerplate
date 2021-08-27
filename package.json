@@ -19,7 +19,7 @@
     "analyze": "source-map-explorer 'build/*.js'",
     "supportedBrowsers": "browserslist-useragent-regexp --allowHigherVersions -o src/supportedBrowsers.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dashboard -- webpack-dev-server --mode development --hot --progress --color --port 3000 --open",
+    "start": "webpack-dashboard -- webpack-dev-server --mode development --port 3000 --open",
     "build": "webpack --progress"
   },
   "license": "MIT",

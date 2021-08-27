@@ -23,6 +23,8 @@ export default {
   context: sourcePath,
   entry: {
     app: './main.tsx',
+    // hot: 'webpack/hot/dev-server.js',
+    // client: 'webpack-dev-server/client/index.js?hot=true&live-reload=true',
   },
   output: {
     path: outPath,
@@ -102,7 +104,7 @@ export default {
           {
             loader: 'css-loader',
             options: {
-              sourceMap: false,
+              sourceMap: !isProduction,
               importLoaders: 1,
               modules: {
                 mode: 'global',
@@ -222,6 +224,7 @@ export default {
         configFile: path.join(__dirname, 'tsconfig.json'),
       },
     }),
+    // !isProduction ? new webpack.HotModuleReplacementPlugin() : null,
   ].filter(Boolean),
   devServer: {
     static: sourcePath,
