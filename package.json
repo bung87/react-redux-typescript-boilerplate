@@ -16,10 +16,11 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "format": "prettier -w src",
+    "analyze": "source-map-explorer 'build/*.js'",
     "supportedBrowsers": "browserslist-useragent-regexp --allowHigherVersions -o src/supportedBrowsers.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dashboard -- webpack-dev-server --mode development --hot --progress --color --port 3000 --open",
-    "build": "webpack-dashboard -- webpack -p --progress --colors"
+    "build": "webpack --progress"
   },
   "license": "MIT",
   "devDependencies": {
@@ -61,6 +62,7 @@
     "prettier": "^2.3.2",
     "react-hot-loader": "^4.13.0",
     "redux-devtools-extension": "^2.13.8",
+    "source-map-explorer": "^2.5.2",
     "style-loader": "^3.2.1",
     "ts-loader": "^9.2.5",
     "ts-node": "^10.2.1",
