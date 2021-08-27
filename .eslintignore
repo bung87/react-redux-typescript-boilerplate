@@ -6,3 +6,4 @@ dist
 # don't lint nyc coverage output
 coverage
 
+*.css.d.ts

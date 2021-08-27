@@ -39,7 +39,7 @@ export const TodoTextInput = ({ placeholder, newTodo, onSave }: Props): JSX.Elem
         onSave(text);
       }
     },
-    [onSave],
+    [newTodo, onSave],
   );
 
   const classes = classNames(
