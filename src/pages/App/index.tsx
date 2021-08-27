@@ -4,6 +4,9 @@ import { RouteComponentProps } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTodoActions } from '@actions';
 import { RootState } from '@reducers';
+import {
+  useRouteMatch,
+} from 'react-router-dom';
 
 import * as TodoModel from '@models';
 import { Header, TodoList, Footer } from '@components';
@@ -20,6 +23,8 @@ const FILTER_FUNCTIONS: Record<TodoModel.Filter, (todo: TodoModel.TodoModel) => 
 
 interface Props extends RouteComponentProps<void> {}
 export const App = ({ history, location }: Props) => {
+  const match = useRouteMatch();
+  console.log(match, history);
   const dispatch = useDispatch();
   const todoActions = useTodoActions(dispatch);
   const { todos, filter } = useSelector((state: RootState) => {

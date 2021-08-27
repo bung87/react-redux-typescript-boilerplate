@@ -19,7 +19,7 @@
     "analyze": "source-map-explorer 'build/*.js'",
     "supportedBrowsers": "browserslist-useragent-regexp --allowHigherVersions -o src/supportedBrowsers.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dashboard -- webpack-dev-server --mode development --port 3000 --open",
+    "start": "webpack-dashboard -- webpack serve --hot --mode development --port 3000 --open",
     "build": "webpack --progress"
   },
   "license": "MIT",
@@ -36,7 +36,7 @@
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "@types/react-redux": "^7.1.5",
-    "@types/react-router": "^5.1.5",
+    "@types/react-router": "^5.1.16",
     "@types/redux-actions": "^2.6.1",
     "@types/webpack": "^4.41.30",
     "@types/webpack-env": "^1.16.2",
@@ -71,16 +71,18 @@
     "webpack": "^5.21.0",
     "webpack-cli": "^4.8.0",
     "webpack-dashboard": "^3.3.5",
-    "webpack-dev-server": "^4.0.0"
+    "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "antd": "^4.16.13",
     "classnames": "^2.3.1",
     "less": "^4.1.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-redux": "^7.2.4",
-    "react-router": "^5.2.0",
+    "react-refresh": "^0.9.0",
+    "react-router-dom": "^5.2.0",
     "redux": "^4.1.1",
     "redux-actions": "^2.6.5",
     "redux-thunk": "^2.3.0"

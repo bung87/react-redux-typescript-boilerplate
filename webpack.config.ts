@@ -12,236 +12,232 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { GitRevisionPlugin } from 'git-revision-webpack-plugin';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import themeConfig from './src/theme_config';
 // variables
-const isProduction = process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production';
 const sourcePath = path.join(__dirname, './src');
 const outPath = path.join(__dirname, './build');
 const tsconfig = JSON5.parse(fs.readFileSync('./tsconfig.json').toString());
 const gitRevisionPlugin = new GitRevisionPlugin();
-export default {
-  context: sourcePath,
-  entry: {
-    app: './main.tsx',
-    // hot: 'webpack/hot/dev-server.js',
-    // client: 'webpack-dev-server/client/index.js?hot=true&live-reload=true',
-  },
-  output: {
-    path: outPath,
-    // filename: isProduction ? '[contenthash].js' : '[fullhash].js',
-    // chunkFilename: isProduction ? '[name].[contenthash].js' : '[name].[fullhash].js',
-  },
-  target: 'web',
-  resolve: {
-    extensions: ['.js', '.ts', '.tsx'],
-    // Fix webpack's default behavior to not load packages with jsnext:main module
-    // (jsnext:main directs not usually distributable es6 format, but es6 sources)
-    mainFields: ['module', 'browser', 'main'],
-    alias: Object.keys(tsconfig.compilerOptions.paths).reduce((aliases, aliasName) => {
+export default (_, argv) => {
+  const { mode } = argv;
+  const isDevelopment = mode === 'development';
+  const isProduction = !isDevelopment;
+  return ({
+    context: sourcePath,
+    entry: {
+      app: './main.tsx',
+      // hot: 'webpack/hot/dev-server.js',
+      // client: 'webpack-dev-server/client/index.js?hot=true&live-reload=true',
+    },
+    output: {
+      path: outPath,
+      // filename: isProduction ? '[contenthash].js' : '[fullhash].js',
+      // chunkFilename: isProduction ? '[name].[contenthash].js' : '[name].[fullhash].js',
+    },
+    target: isProduction ? 'browserslist' :  'web',
+    resolve: {
+      extensions: ['.js', '.ts', '.tsx'],
+      // Fix webpack's default behavior to not load packages with jsnext:main module
+      // (jsnext:main directs not usually distributable es6 format, but es6 sources)
+      mainFields: ['module', 'browser', 'main'],
+      alias: Object.keys(tsconfig.compilerOptions.paths).reduce((aliases, aliasName) => {
 
-      // eslint-disable-next-line no-param-reassign
-      aliases[aliasName] = path.resolve(__dirname, `src/${tsconfig.compilerOptions.paths[aliasName][0]}`);
+        // eslint-disable-next-line no-param-reassign
+        aliases[aliasName] = path.resolve(__dirname, `src/${tsconfig.compilerOptions.paths[aliasName][0]}`);
 
-      return aliases;
-    }, { 'react-dom': '@hot-loader/react-dom' }),
-  },
-  module: {
-    rules: [
-      // .ts, .tsx
-      {
-        test: /\.tsx?$/,
-        use: [
-          !isProduction && {
-            loader: 'babel-loader',
-            options: { plugins: ['react-hot-loader/babel'] },
-          },
-          {
-            loader: 'ts-loader',
-            options: {
-              // disable type checker - we will use it in fork plugin
-              transpileOnly: true,
+        return aliases;
+      }, { 'react-dom': '@hot-loader/react-dom' }),
+    },
+    module: {
+      rules: [
+        // .ts, .tsx
+        {
+          test: /\.tsx?$/,
+          use: [
+            !isProduction && {
+              loader: 'babel-loader',
+              options: { plugins: [isDevelopment && require('react-refresh/babel')] },
             },
-          },
-        ].filter(Boolean),
-      },
-      // css
-      {
-        test: /\.css$/,
-        use: [
-          isProduction ? {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              esModule: false,
-            },
-          } : 'style-loader',
-          {
-            loader: '@teamsupercell/typings-for-css-modules-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: !isProduction,
-              modules: {
-                auto: true,
-                localIdentName: isProduction ? '[hash:base64:5]' : '[local]__[hash:base64:5]',
+            {
+              loader: 'ts-loader',
+              options: {
+                // disable type checker - we will use it in fork plugin
+                transpileOnly: true,
               },
             },
-          },
-          'postcss-loader',
-        ],
-      }, {
-        test: /node_modules\/.+\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
-      },
-      {
-        test: /\.less$/,
-        exclude: /\.module\.less$/,
-        use: [
-          'style-loader',
-          {
-            loader: '@teamsupercell/typings-for-css-modules-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: !isProduction,
-              importLoaders: 1,
-              modules: {
-                mode: 'global',
+          ].filter(Boolean),
+        },
+        // css
+        {
+          test: /\.css$/,
+          use: [
+            isProduction ? {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                esModule: false,
               },
+            } : 'style-loader',
+            {
+              loader: '@teamsupercell/typings-for-css-modules-loader',
             },
-          },
-          'postcss-loader',
-          {
-            loader: 'less-loader',
-            options: {
-              lessOptions: {
-                modifyVars: {
-                  '@primary-color': themeConfig.themeColor,
-                  '@primary-gradient-color': themeConfig.gradientColor,
-                  '@main-btn-bg': `linear-gradient(270deg, ${themeConfig.gradientColor} 0%, ${themeConfig.themeColor} 100%)`,
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: !isProduction,
+                modules: {
+                  auto: true,
+                  localIdentName: isProduction ? '[hash:base64:5]' : '[local]__[hash:base64:5]',
                 },
-                javascriptEnabled: true,
               },
             },
-          },
-        ],
-      },
-      {
-        test: /\.module\.less$/,
-        use: [
-          'style-loader',
-          {
-            loader: '@teamsupercell/typings-for-css-modules-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                mode: 'local',
-                namedExport: true,
-                localIdentName: '[path][name]__[local]',
-                exportOnlyLocals: false,
-              },
-              sourceMap: false,
+            'postcss-loader',
+          ],
+        }, {
+          test: /node_modules\/.+\.css$/,
+          use: ['style-loader', 'css-loader', 'postcss-loader'],
+        },
+        {
+          test: /\.less$/,
+          exclude: /\.module\.less$/,
+          use: [
+            'style-loader',
+            {
+              loader: '@teamsupercell/typings-for-css-modules-loader',
             },
-          },
-          'postcss-loader',
-          {
-            loader: 'less-loader',
-            options: {
-              lessOptions: {
-                javascriptEnabled: true,
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: !isProduction,
+                importLoaders: 1,
+                modules: {
+                  mode: 'global',
+                },
               },
             },
+            'postcss-loader',
+            {
+              loader: 'less-loader',
+              options: {
+                lessOptions: {
+                  modifyVars: {
+                    '@primary-color': themeConfig.themeColor,
+                    '@primary-gradient-color': themeConfig.gradientColor,
+                    '@main-btn-bg': `linear-gradient(270deg, ${themeConfig.gradientColor} 0%, ${themeConfig.themeColor} 100%)`,
+                  },
+                  javascriptEnabled: true,
+                },
+              },
+            },
+          ],
+        },
+        {
+          test: /\.module\.less$/,
+          use: [
+            'style-loader',
+            {
+              loader: '@teamsupercell/typings-for-css-modules-loader',
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                modules: {
+                  mode: 'local',
+                  namedExport: true,
+                  localIdentName: '[path][name]__[local]',
+                  exportOnlyLocals: false,
+                },
+                sourceMap: false,
+              },
+            },
+            'postcss-loader',
+            {
+              loader: 'less-loader',
+              options: {
+                lessOptions: {
+                  javascriptEnabled: true,
+                },
+              },
+            },
+          ],
+        },
+        // static assets
+        { test: /\.html$/, use: 'html-loader' },
+        { test: /\.(a?png|svg)$/, use: 'url-loader?limit=10000' },
+        {
+          test: /\.(jpe?g|gif|bmp|mp3|mp4|ogg|wav|eot|ttf|woff|woff2)$/,
+          use: 'file-loader',
+        },
+      ],
+    },
+    optimization: {
+      mergeDuplicateChunks: true,
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'vendor',
+            chunks: 'all',
           },
-        ],
-      },
-      // static assets
-      { test: /\.html$/, use: 'html-loader' },
-      { test: /\.(a?png|svg)$/, use: 'url-loader?limit=10000' },
-      {
-        test: /\.(jpe?g|gif|bmp|mp3|mp4|ogg|wav|eot|ttf|woff|woff2)$/,
-        use: 'file-loader',
-      },
-    ],
-  },
-  optimization: {
-    mergeDuplicateChunks: true,
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-          name: 'vendor',
-          chunks: 'all',
         },
       },
-    },
-    runtimeChunk: {
-      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-      name: entrypoint => `runtime~${entrypoint.name}`,
-    },
-  },
-  plugins: [
-    gitRevisionPlugin,
-    new webpack.DefinePlugin({
-      VERSION: JSON.stringify(gitRevisionPlugin.version()),
-      COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
-      BRANCH: JSON.stringify(gitRevisionPlugin.branch()),
-      LASTCOMMITDATETIME: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
-    }),
-    !isProduction ? new DashboardPlugin() : null,
-    new webpack.EnvironmentPlugin({
-      NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
-      DEBUG: false,
-    }),
-    new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({
-      filename: '[hash].css',
-      // disable: !isProduction
-    }),
-    new HtmlWebpackPlugin({
-      template: 'assets/index.html',
-      minify: {
-        minifyJS: true,
-        minifyCSS: true,
-        removeComments: true,
-        useShortDoctype: true,
-        collapseWhitespace: true,
-        collapseInlineTagWhitespace: true,
+      runtimeChunk: {
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        name: entrypoint => `runtime~${entrypoint.name}`,
       },
-      append: {
-        head: `<script src="//cdn.polyfill.io/v3/polyfill.min.js"></script>`,
-      },
-      meta: {
-        title: pkg.name,
-        description: pkg.description,
-        keywords: Array.isArray(pkg.keywords) ? pkg.keywords.join(',') : '',
-      },
-    }),
-    new ForkTsCheckerWebpackPlugin({
-      typescript: {
-        configFile: path.join(__dirname, 'tsconfig.json'),
-      },
-    }),
-    // !isProduction ? new webpack.HotModuleReplacementPlugin() : null,
-  ].filter(Boolean),
-  devServer: {
-    static: sourcePath,
-    hot: true,
-    historyApiFallback: {
-      disableDotRule: true,
     },
-    client: {
-      logging: 'warn',
-    },
-  },
-  // https://webpack.js.org/configuration/devtool/
-  devtool: isProduction ? 'hidden-source-map' : 'cheap-module-source-map',
-  // node: {
-  //   // workaround for webpack-dev-server issue
-  //   // https://github.com/webpack/webpack-dev-server/issues/60#issuecomment-103411179
-  //   fs: 'empty',
-  //   net: 'empty',
-  // },
+    plugins: [
+      isDevelopment && new ReactRefreshWebpackPlugin(),
+      gitRevisionPlugin,
+      new webpack.DefinePlugin({
+        VERSION: JSON.stringify(gitRevisionPlugin.version()),
+        COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
+        BRANCH: JSON.stringify(gitRevisionPlugin.branch()),
+        LASTCOMMITDATETIME: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
+      }),
+      !isProduction ? new DashboardPlugin() : null,
+      new webpack.EnvironmentPlugin({
+        NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
+        DEBUG: false,
+      }),
+      new CleanWebpackPlugin(),
+      new MiniCssExtractPlugin({
+        filename: '[hash].css',
+        // disable: !isProduction
+      }),
+      new HtmlWebpackPlugin({
+        template: 'assets/index.html',
+        minify: {
+          minifyJS: true,
+          minifyCSS: true,
+          removeComments: true,
+          useShortDoctype: true,
+          collapseWhitespace: true,
+          collapseInlineTagWhitespace: true,
+        },
+        append: {
+          head: `<script src="//cdn.polyfill.io/v3/polyfill.min.js"></script>`,
+        },
+        meta: {
+          title: pkg.name,
+          description: pkg.description,
+          keywords: Array.isArray(pkg.keywords) ? pkg.keywords.join(',') : '',
+        },
+      }),
+      new ForkTsCheckerWebpackPlugin({
+        typescript: {
+          configFile: path.join(__dirname, 'tsconfig.json'),
+        },
+      }),
+      // !isProduction ? new webpack.HotModuleReplacementPlugin() : null,
+    ].filter(Boolean),
+    // https://webpack.js.org/configuration/devtool/
+    devtool: isProduction ? 'hidden-source-map' : 'cheap-module-source-map',
+    // node: {
+    //   // workaround for webpack-dev-server issue
+    //   // https://github.com/webpack/webpack-dev-server/issues/60#issuecomment-103411179
+    //   fs: 'empty',
+    //   net: 'empty',
+    // },
+  });
 };
